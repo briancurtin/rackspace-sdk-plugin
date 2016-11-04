@@ -206,3 +206,27 @@ class HighAvailabilityInstance(resource.Resource):
         body = {'restart': {}}
         url = utils.urljoin(self.base_path, self.id, 'action')
         session.post(url, endpoint_filter=self.service, json=body)
+
+    def add_configuration(self, session, configuration_id):
+        """Adds a specified configuration group to the HA Instance.
+
+        :param session: The session to use for making this request.
+        :param str configuration_id: The configuration group ID.
+        :type session: :class:`~openstack.session.Session`
+        :returns: ``None``
+        """
+        body = {'ha_instance': {'configuration_id': configuration_id}}
+        url = utils.urljoin(self.base_path, self.id)
+        session.patch(url, endpoint_filter=self.service, json=body)
+
+    def remove_configuration(self, session):
+        """Removes a specified configuration group from the HA Instance.
+
+        :param session: The session to use for making this request.
+        :param str configuration_id: The configuration group ID.
+        :type session: :class:`~openstack.session.Session`
+        :returns: ``None``
+        """
+        body = {'ha_instance': {'configuration_id': ''}}
+        url = utils.urljoin(self.base_path, self.id)
+        session.patch(url, endpoint_filter=self.service, json=body)

@@ -22,6 +22,10 @@ class TestDatabaseProxy(test_proxy_base.TestProxyBase):
         super(TestDatabaseProxy, self).setUp()
         self.proxy = _proxy.Proxy(self.session)
 
+    def _ha_method(self, method):
+        return ("rackspace.database.v1.high_availability_instance."
+                "HighAvailabilityInstance.{}").format(method)
+
     def test_backups(self):
         self.verify_list(self.proxy.backups, backup.Backup, paginated=False)
 
@@ -98,3 +102,42 @@ class TestDatabaseProxy(test_proxy_base.TestProxyBase):
     def test_ha_instance_update(self):
         self.verify_update(self.proxy.update_ha_instance,
                            high_availability_instance.HighAvailabilityInstance)
+
+    def test_ha_instance_resize(self):
+        self._verify2(self._ha_method("resize"), self.proxy.resize_ha_instance,
+                      method_args=['value', 'flavor_reference'],
+                      method_result=None,
+                      expected_args=[self.session, 'flavor_reference'],
+                      expected_result=None)
+
+    def test_ha_instance_resize_volume(self):
+        self._verify2(self._ha_method("resize_volume"),
+                      self.proxy.resize_ha_instance_volume,
+                      method_args=['value', 'volume_size'],
+                      method_result=None,
+                      expected_args=[self.session, 'volume_size'],
+                      expected_result=None)
+
+    def test_ha_instance_restart(self):
+        self._verify2(self._ha_method("restart"),
+                      self.proxy.restart_ha_instance,
+                      method_args=['value'],
+                      method_result=None,
+                      expected_args=[self.session],
+                      expected_result=None)
+
+    def test_ha_instance_attach_configuration(self):
+        self._verify2(self._ha_method("add_configuration"),
+                      self.proxy.add_configuration_to_ha_instance,
+                      method_args=['value', 'configuration_id'],
+                      method_result=None,
+                      expected_args=[self.session, 'configuration_id'],
+                      expected_result=None)
+
+    def test_ha_instance_detach_configuration(self):
+        self._verify2(self._ha_method("remove_configuration"),
+                      self.proxy.remove_configuration_from_ha_instance,
+                      method_args=['value'],
+                      method_result=None,
+                      expected_args=[self.session],
+                      expected_result=None)

@@ -209,3 +209,33 @@ class TestHA(testtools.TestCase):
         body = {'restart': {}}
         sess.post.assert_called_with(url, endpoint_filter=sot.service,
                                      json=body)
+
+    def test_add_configuration(self):
+        response = mock.Mock()
+        response.json = mock.Mock(return_value='')
+
+        sess = mock.Mock()
+        sess.post = mock.Mock(return_value=response)
+
+        sot = high_availability_instance.HighAvailabilityInstance(EXAMPLE)
+        self.assertIsNone(sot.add_configuration(sess, 'config_id'))
+
+        url = ("ha/%s" % sot.id)
+        body = {'ha_instance': {'configuration_id': 'config_id'}}
+        sess.patch.assert_called_with(url, endpoint_filter=sot.service,
+                                      json=body)
+
+    def test_remove_configuration(self):
+        response = mock.Mock()
+        response.json = mock.Mock(return_value='')
+
+        sess = mock.Mock()
+        sess.post = mock.Mock(return_value=response)
+
+        sot = high_availability_instance.HighAvailabilityInstance(EXAMPLE)
+        self.assertIsNone(sot.remove_configuration(sess))
+
+        url = ("ha/%s" % sot.id)
+        body = {'ha_instance': {'configuration_id': ''}}
+        sess.patch.assert_called_with(url, endpoint_filter=sot.service,
+                                      json=body)

@@ -192,7 +192,8 @@ class Proxy(_proxy.Proxy):
         :returns: A generator of high availability instances objects
 
         :rtype: :class:`~rackspace.database.v1
-                         .high_availability_instance.HighAvailabilityInstance`
+                        .high_availability_instance
+                        .HighAvailabilityInstance`
         """
         return self._list(high_availability_instance.HighAvailabilityInstance,
                           paginated=False, **query)
@@ -208,7 +209,8 @@ class Proxy(_proxy.Proxy):
         :returns: The results of high availability instance creation
 
         :rtype: :class:`~rackspace.database.v1
-                        .high_availability_instance.HighAvailabilityInstance`
+                        .high_availability_instance
+                        .HighAvailabilityInstance`
         """
         return self._create(
             high_availability_instance.HighAvailabilityInstance, **attrs)
@@ -256,13 +258,14 @@ class Proxy(_proxy.Proxy):
                                    .high_availability_instance
                                    .HighAvailabilityInstance` instance.
 
-        :returns: One :class:`~rackspace.database.v1
-          .high_availability_instance.HighAvailabilityInstance`
+        :rtype: :class:`~rackspace.database.v1
+                        .high_availability_instance
+                        .HighAvailabilityInstance`
         :raises: :class:`~openstack.exceptions.ResourceNotFound`
                  when no resource can be found.
         """
-        return self._get(
-            high_availability_instance.HighAvailabilityInstance, value)
+        return self._get(high_availability_instance.HighAvailabilityInstance,
+                         value)
 
     def update_ha_instance(self, value, **attrs):
         """Update a high availability instance
@@ -280,5 +283,80 @@ class Proxy(_proxy.Proxy):
                         .HighAvailabilityInstance`
         """
         return self._update(
-            high_availability_instance.HighAvailabilityInstance,
-            value, **attrs)
+            high_availability_instance.HighAvailabilityInstance, value,
+            **attrs)
+
+    def resize_ha_instance(self, value, flavor_reference):
+        """Update a high availability instance
+
+        :param value: Either the id of a high availability instance instance
+                      or a :class:`~rackspace.database.v1
+                                   .high_availability_instance
+                                   .HighAvailabilityInstance` instance.
+        :param flavor_reference: The ID of the flavor which the instance will
+                                 be resized to.
+
+        :returns: None
+        """
+        instance = self._get_resource(
+            high_availability_instance.HighAvailabilityInstance, value)
+        instance.resize(self.session, flavor_reference)
+
+    def resize_ha_instance_volume(self, value, volume_size):
+        """Update a high availability instance
+
+        :param value: Either the id of a high availability instance instance
+                      or a :class:`~rackspace.database.v1
+                                   .high_availability_instance
+                                   .HighAvailabilityInstance` instance.
+        :param volume_size: The size in GB of the volume which the instance
+                            will be resized to.
+
+        :returns: None
+        """
+        instance = self._get_resource(
+            high_availability_instance.HighAvailabilityInstance, value)
+        instance.resize_volume(self.session, volume_size)
+
+    def restart_ha_instance(self, value):
+        """Restart the database instance
+
+        :param value: The value can be the ID of a high availability instance
+                      or a :class:`~rackspace.database.v1
+                                   .high_availability_instance
+                                   .HighAvailabilityInstance` instance.
+
+        :returns: None
+        """
+        instance = self._get_resource(
+            high_availability_instance.HighAvailabilityInstance, value)
+        instance.restart(self.session)
+
+    def add_configuration_to_ha_instance(self, value, configuration_id):
+        """Update a high availability instance
+
+        :param value: Either the id of a high availability instance instance
+                      or a :class:`~rackspace.database.v1
+                                   .high_availability_instance
+                                   .HighAvailabilityInstance` instance.
+        :param configuration_id: The configuration ID to attach.
+
+        :returns: None
+        """
+        instance = self._get_resource(
+            high_availability_instance.HighAvailabilityInstance, value)
+        instance.add_configuration(self.session, configuration_id)
+
+    def remove_configuration_from_ha_instance(self, value):
+        """Update a high availability instance
+
+        :param value: Either the id of a high availability instance instance
+                      or a :class:`~rackspace.database.v1
+                                   .high_availability_instance
+                                   .HighAvailabilityInstance` instance.
+
+        :returns: None
+        """
+        instance = self._get_resource(
+            high_availability_instance.HighAvailabilityInstance, value)
+        instance.remove_configuration(self.session)
