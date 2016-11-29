@@ -6,7 +6,7 @@ Rackspace Plugin for the OpenStack SDK
 
 This plugin enables support for Rackspace authentication and services
 with the
-`OpenStack SDK <https://pypi.python.org/pypi/python-openstacksdk>`_.
+`OpenStack SDK <https://pypi.python.org/pypi/openstacksdk>`_.
 
 Usage
 -----
