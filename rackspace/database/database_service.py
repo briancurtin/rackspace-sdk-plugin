@@ -21,6 +21,9 @@ class DatabaseService(service_filter.ServiceFilter):
     def __init__(self, version=None):
         """Create a database service."""
 
+        if not version:
+            version = "v1"
+
         super(DatabaseService, self).__init__(service_type="rax:database",
                                               service_name="cloudDatabases",
                                               version=version)
